@@ -15,13 +15,14 @@ public class Connexion implements Runnable
 	public String uneLigne = null;
 	public String username = null;
 	public static final int MAX_USER = 80;
+	public BufferedReader reader;
 	
     public void run()
     {
 		try
 		{
 			//PrintWriter writer = new PrintWriter(new OutputStreamWriter(unSocket.getOutputStream()));
-			BufferedReader reader = new BufferedReader(new InputStreamReader(unSocket.getInputStream()));
+			reader = new BufferedReader(new InputStreamReader(unSocket.getInputStream()));
 			
 			username = reader.readLine();
 			      if(username.length() >  NBCONN)
