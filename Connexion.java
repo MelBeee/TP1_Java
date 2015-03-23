@@ -14,7 +14,7 @@ public class Connexion implements Runnable
 	public static int cCourante = 0;
 	public String uneLigne = null;
 	public String username = null;
-	public static final int MAX_USER = 80;
+	public static final int MAX_USERNAME = 80;
 	public BufferedReader reader;
 	
     public void run()
