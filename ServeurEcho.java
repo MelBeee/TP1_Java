@@ -46,7 +46,7 @@ public class ServeurEcho
 						unDeConnexion.setDaemon(true);
 						unDeConnexion.start();
 						
-						MesConnexions.ajouterClient(uneConnexion);
+						MesConnexions.add(uneConnexion);
 					}
 				}
 				catch (SocketTimeoutException  e)
