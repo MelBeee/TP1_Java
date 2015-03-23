@@ -1,8 +1,21 @@
 import java.io.*;
 import java.net.*;
 
-public  class ServeurEcho
+public class ServeurEcho
 {	
+	// un tableau de tout les connexions 
+    ArrayList<Connexion> MesConnexions = new ArrayList<>();
+   
+   // Methode qui envoit en console le message ecrit par un user a tout les 
+   // utilisateurs connectés dans l'array list
+	public static void EcrireDesMessages(String unMessage)
+	{
+		for(int cpt = 0 ; cpt < MesConnexions.size() ; cpt++ )
+		{
+			MesConnexions.get(cpt).EcrireLeMessage(unMessage);
+		}
+	}
+   
 	public void lancerServeur(int port)
 	{
 		try
@@ -17,7 +30,6 @@ public  class ServeurEcho
 			
 			socketServeur = new ServerSocket(port);
 			socketServeur.setSoTimeout(1000);
-			System.out.println("Serveur echo en attente d'une connexion.");
 			
 			
 			while(unDeTerminateur.isAlive())
@@ -33,6 +45,8 @@ public  class ServeurEcho
 						Thread unDeConnexion = new Thread(uneConnexion);
 						unDeConnexion.setDaemon(true);
 						unDeConnexion.start();
+						
+						MesConnexions.ajouterClient(uneConnexion);
 					}
 				}
 				catch (SocketTimeoutException  e)
@@ -47,7 +61,6 @@ public  class ServeurEcho
 				socketServeur.close();
 			}
 		
-
 			System.exit(1);
 		}
 		catch(IOException ioe)
@@ -60,19 +73,6 @@ public  class ServeurEcho
 	public static void main(String args[]) throws IOException
 	{
 		ServeurEcho unBeauServeur = new ServeurEcho();
-		unBeauServeur.lancerServeur(7);
+		unBeauServeur.lancerServeur(50000);
 	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
