@@ -45,8 +45,7 @@ public class Connexion implements Runnable
 		{
 			//System.err.println("Fermeture innattendue de session sans fermer la connexion");
 			System.exit(1);
-		}	
-		
+		}		
 		finally
 		{
 			try
