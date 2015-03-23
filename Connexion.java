@@ -30,7 +30,6 @@ public class Connexion implements Runnable
 						username = socket.getInetAddress().getHostAddress();
 
 			uneLigne = username + " viens de joindre la conversation";
-			///////////////////////
 			do
 			{
 				uneLigne = reader.readLine();
@@ -38,9 +37,8 @@ public class Connexion implements Runnable
 					if(uneLigne.length() > MAX_USER)
 						uneLigne = username + ": " + uneLigne.substring(0, MAX_USER);
 					else
-						uneLigne = username + ": " + uneLigne
+						uneLigne = username + ": " + uneLigne;
 			}while(uneLigne != null && !uneLigne.isEmpty());
-			////////////////////////
 		}
 		catch(IOException ioe)
 		{
