@@ -27,7 +27,7 @@ public class Connexion implements Runnable
 			      if(username.length() >  NBCONN)
 					username = username.substring(0, NBCONN);
 					else if(username.isEmpty())
-						username = socket.getInetAddress().getHostAddress();
+						username = unSocket.getInetAddress().getHostAddress();
 
 			uneLigne = username + " viens de joindre la conversation";
 			do
