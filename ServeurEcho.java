@@ -10,7 +10,7 @@ public class ServeurEcho
    
    // Methode qui envoit en console le message ecrit par un user a tout les 
    // utilisateurs connectés dans l'array list
-	public void EcrireDesMessages(String unMessage)
+	public synchronized void EcrireDesMessages(String unMessage)
 	{
 		for(int cpt = 0 ; cpt < MesConnexions.size() ; cpt++ )
 		{
