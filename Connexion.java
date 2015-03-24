@@ -4,7 +4,7 @@ import java.lang.Object;
 
 public class Connexion implements Runnable
 {
-	public static final int NBCONN = 7;
+	public static final int NBCONN = 2;
 	public static int cCourante = 0;
 	public String uneLigne = null;
 	public String username = null;
@@ -43,8 +43,9 @@ public class Connexion implements Runnable
 		{	
 			writer.print("Entrez votre nom d'utilisateur: ");
 			writer.flush();
+         
 			username = reader.readLine();
-			    if(username.length() >  MAX_USERNAME)
+			   if(username.length() >  MAX_USERNAME)
 					username = username.substring(0, MAX_USERNAME);
 				else if(username.length() <= MIN_USERNAME)
 					username = unSocket.getInetAddress().getHostAddress();
@@ -53,6 +54,7 @@ public class Connexion implements Runnable
 			do
 			{
 				uneLigne = reader.readLine();
+            envoyer = true;
 				if(uneLigne.length() > MAX_CHAR)
 				{
 					uneLigne = uneLigne.substring(MIN_CHAR, MAX_CHAR);	
@@ -62,7 +64,7 @@ public class Connexion implements Runnable
 					quitter = true;
 					envoyer = false;
 				}
-				if(uneLigne.trim().length() == MIN_CHAR)
+				else if(uneLigne.trim().length() == MIN_CHAR)
 				{
 					envoyer = false;
 				}
@@ -85,7 +87,7 @@ public class Connexion implements Runnable
 				reader.close();
 				unSocket.close();
 				cCourante --;
-				System.out.println("Client déconnecté");
+				System.out.println("Client deconnecte");
 			}
 			catch(IOException ioe)
 			{ 
