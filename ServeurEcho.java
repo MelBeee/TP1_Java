@@ -6,11 +6,11 @@ import java.util.ListIterator;
 public class ServeurEcho
 {	
 	// un tableau de tout les connexions 
-    ArrayList<Connexion> MesConnexions = new ArrayList<>();
+    static ArrayList<Connexion> MesConnexions = new ArrayList<>();
    
    // Methode qui envoit en console le message ecrit par un user a tout les 
    // utilisateurs connectés dans l'array list
-	public synchronized void EcrireDesMessages(String unMessage)
+	public static synchronized void EcrireDesMessages(String unMessage)
 	{
 		for(int cpt = 0 ; cpt < MesConnexions.size() ; cpt++ )
 		{
@@ -38,12 +38,12 @@ public class ServeurEcho
 			{
 				try
 				{
-					if(Connexion.cCourante <= Connexion.nbConn)
+					if(Connexion.cCourante <= Connexion.NBCONN)
 					{
 						unSocket = socketServeur.accept();
 						System.out.println("Connexion du client.");
 						
-						Connexion uneConnexion = new Connexion(unSocket);
+						Connexion uneConnexion = new Connexion(unSocket, this);
 						Thread unDeConnexion = new Thread(uneConnexion);
 						unDeConnexion.setDaemon(true);
 						unDeConnexion.start();

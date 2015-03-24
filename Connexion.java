@@ -1,45 +1,76 @@
 import  java.io.*;
 import java.net.*;
+import java.lang.Object;
 
 public class Connexion implements Runnable
 {
-	public Socket unSocket = null; 
-    public Connexion(Socket unSocketUtilise)
-    {
-		unSocket = unSocketUtilise;
-		cCourante++;
-    }
-
 	public static final int NBCONN = 7;
 	public static int cCourante = 0;
 	public String uneLigne = null;
 	public String username = null;
-	public static final int MAX_USERNAME = 80;
+	public static final int MAX_USERNAME = 8;
+	public static final int MIN_USERNAME = 1;
+	public static final int MAX_CHAR = 80;
+	public static final int MIN_CHAR = 0;
 	public BufferedReader reader;
+	public PrintWriter writer;
+	public Socket unSocket = null; 
+	public ServeurEcho uneInstanceDeServeur;
+	
+	
+    public Connexion(Socket unSocketUtilise, ServeurEcho unServeur)
+    {		
+		unSocket = unSocketUtilise;
+		uneInstanceDeServeur = unServeur;
+		try
+		{
+			writer = new PrintWriter(new OutputStreamWriter(unSocket.getOutputStream()));
+			reader = new BufferedReader(new InputStreamReader(unSocket.getInputStream()));
+		}
+		catch(IOException ioe)
+		{
+			System.err.println(ioe);
+			System.exit(1);
+		}
+		cCourante++;
+    }
 	
     public void run()
     {
+		boolean quitter = false; 
+		boolean envoyer = true;
 		try
-		{
-			//PrintWriter writer = new PrintWriter(new OutputStreamWriter(unSocket.getOutputStream()));
-			reader = new BufferedReader(new InputStreamReader(unSocket.getInputStream()));
-			
+		{	
+			writer.print("Entrez votre nom d'utilisateur: ");
+			writer.flush();
 			username = reader.readLine();
-			      if(username.length() >  NBCONN)
-					username = username.substring(0, NBCONN);
-					else if(username.isEmpty())
-						username = unSocket.getInetAddress().getHostAddress();
+			    if(username.length() >  MAX_USERNAME)
+					username = username.substring(0, MAX_USERNAME);
+				else if(username.length() <= MIN_USERNAME)
+					username = unSocket.getInetAddress().getHostAddress();
 
-			uneLigne = username + " viens de joindre la conversation";
+			uneInstanceDeServeur.EcrireDesMessages(username + " viens de joindre la conversation.");
 			do
 			{
 				uneLigne = reader.readLine();
-				if(!uneLigne.isEmpty())
-					if(uneLigne.length() > MAX_USER)
-						uneLigne = username + ": " + uneLigne.substring(0, MAX_USER);
-					else
-						uneLigne = username + ": " + uneLigne;
-			}while(uneLigne != null && !uneLigne.isEmpty());
+				if(uneLigne.length() > MAX_CHAR)
+				{
+					uneLigne = uneLigne.substring(MIN_CHAR, MAX_CHAR);	
+				}
+				else if(uneLigne.isEmpty())
+				{
+					quitter = true;
+					envoyer = false;
+				}
+				if(uneLigne.trim().length() == MIN_CHAR)
+				{
+					envoyer = false;
+				}
+				
+				if(envoyer)
+					uneInstanceDeServeur.EcrireDesMessages(username + ": " + uneLigne);
+					
+			}while(!quitter);
 		}
 		catch(IOException ioe)
 		{
@@ -50,16 +81,23 @@ public class Connexion implements Runnable
 		{
 			try
 			{
+				uneInstanceDeServeur.EcrireDesMessages(username + " viens de se deconnecter.");
 				reader.close();
 				unSocket.close();
 				cCourante --;
+				System.out.println("Client déconnecté");
 			}
 			catch(IOException ioe)
 			{ 
 				
 			}
 		}
-		System.out.println("Client déconnecté");
+	}
+	
+	public void EcrireLeMessage(String Message)
+	{
+		writer.println(Message);
+		writer.flush();
 	}
 }
 
