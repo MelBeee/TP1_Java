@@ -8,6 +8,7 @@ public class ServeurEcho
 	final int MIN_CHAR = 0;
 	final int TEMPS_TIMEOUT = 50000;
 	static final int PORT_SOCKET = 50000;
+	final int NBRE_CONNEXION_MAX = 5;
 	PrintWriter writer = null;
 	Socket unSocket = null;
 	ServerSocket socketServeur = null;
@@ -92,19 +93,18 @@ public class ServeurEcho
 			{
 				try
 				{
-					if(Connexion.nbreInstanceConnexion <= Connexion.NBRE_CONNEXION_MAX)
-					{
+					if(MesConnexions.size() + 1 <= NBRE_CONNEXION_MAX)
+					{	
 						unSocket = socketServeur.accept();
-	
 						Connexion uneConnexion = new Connexion(unSocket);
 						unSocket.setSoTimeout(TEMPS_TIMEOUT);
 						
 						Thread unDeConnexion = new Thread(uneConnexion);
 						unDeConnexion.setDaemon(true);
-						MesConnexions.add(uneConnexion);
 						unDeConnexion.start();
+						MesConnexions.add(uneConnexion);
 
-						DemanderUsername();
+						//DemanderUsername();
 						System.out.println("Connexion du client.");
 					}
 					else

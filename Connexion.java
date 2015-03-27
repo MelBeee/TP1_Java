@@ -8,8 +8,6 @@ public class Connexion implements Runnable
 	final int MIN_USERNAME = 1;
 	final int MAX_CHAR = 80;
 	final int MIN_CHAR = 0;
-	public static final int NBRE_CONNEXION_MAX = 5;
-	public static int nbreInstanceConnexion = 0;
 	
 	public BufferedReader reader;
 	public Socket unSocket = null; 
@@ -21,7 +19,6 @@ public class Connexion implements Runnable
     public Connexion(Socket unSocketUtilise)
     {		
 		unSocket = unSocketUtilise;
-		nbreInstanceConnexion++;
     }
 	
     public void run()
@@ -62,7 +59,6 @@ public class Connexion implements Runnable
 			{
 				reader.close();
 				unSocket.close();
-				nbreInstanceConnexion --;
 				System.out.println("Client deconnecte");
 			}
 			catch(IOException ioe)
