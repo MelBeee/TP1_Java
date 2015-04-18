@@ -2,6 +2,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 /**
  * Created by 201029426 on 2015-04-17.
@@ -32,80 +34,53 @@ public class Chat {
     }
 
     public Chat() {
+        TA_Chat.setEnabled(false);
+
         BTN_Quitter.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.exit(1);
+                if (connecter) {
+                    Deconnexion();
+                } else {
+                    System.exit(1);
+                }
             }
         });
 
         BTN_Envoyer.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if(TB_Message.getText().isEmpty())
-                {
-                    JOptionPane.showMessageDialog(rootPanel,
-                            "Un message vide ne peut être envoyé.", "Attention !",
-                            JOptionPane.WARNING_MESSAGE);
-                }
-                else if(TB_Message.getText().trim().isEmpty())
-                {
-                    // Ici on "reset" notre timeout
-                }
-                else
-                {
-                    // Ici on écrit le message dans le textbox
-                }
+                EnvoyerMessage();
             }
         });
 
         BTN_Connexion.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if(BTN_Connexion.getText() == "Connexion")
-                {
-                    if(TB_AdresseIP.getText().isEmpty() || TB_AdresseIP.getText().length() > MAX_IPADDRESS)
-                    {
-                        JOptionPane.showMessageDialog(rootPanel,
-                                "Adresse IP invalide", "Attention !",
-                                JOptionPane.WARNING_MESSAGE );
-                    }
-                    else if(TB_Username.getText().isEmpty())
-                    {
-                        JOptionPane.showMessageDialog(rootPanel,
-                                "Entrez un nom d'utilisateur pour se connecter.", "Attention !",
-                                JOptionPane.WARNING_MESSAGE );
-                    }
-                    else
-                    {
-                        if(!VerifierNomUser(TB_Username.getText()))
-                        {
-                            BTN_Connexion.setText("Deconnection");
-                            connecter = true;
-
-                            // ici on se connecte
-                        }
-                        else
-                        {
+                if (BTN_Connexion.getText() == "Connexion") {
+                    if (VerificationConnexion()) {
+                        if (!VerifierNomUser(TB_Username.getText())) {
+                            Connexion();
+                        } else {
                             JOptionPane.showMessageDialog(rootPanel,
                                     "Nom d'utilisateur déjà utilisé.", "Attention !",
-                                    JOptionPane.WARNING_MESSAGE );
+                                    JOptionPane.WARNING_MESSAGE);
                         }
                     }
+                } else {
+                    if (connecter) {
+                        Deconnexion();
+                    }
                 }
-                else
-                {
-                    if(connecter)
-                    {
-                        BTN_Connexion.setText("Connexion");
-                        connecter = false;
+            }
+        });
 
-                        // ici on se deconnecte
-                    }
-                    else
-                    {
-                        // ici yé pas senser avoir d'erreur
-                    }
+        TB_Message.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                super.keyPressed(e);
+                if (e.getKeyChar() == KeyEvent.VK_ENTER) {
+                    EnvoyerMessage();
                 }
             }
         });
@@ -123,8 +98,75 @@ public class Chat {
                 }
             }
         }
-
         return existe;
+    }
+
+    public boolean VerificationConnexion()
+    {
+        boolean valide = true;
+
+        if(TB_AdresseIP.getText().isEmpty() || TB_AdresseIP.getText().length() > MAX_IPADDRESS)
+        {
+            JOptionPane.showMessageDialog(rootPanel,
+                    "Adresse IP invalide", "Attention !",
+                    JOptionPane.WARNING_MESSAGE );
+            valide = false;
+        }
+        else if(TB_Username.getText().isEmpty())
+        {
+            JOptionPane.showMessageDialog(rootPanel,
+                    "Entrez un nom d'utilisateur pour se connecter.", "Attention !",
+                    JOptionPane.WARNING_MESSAGE );
+            valide = false;
+        }
+        return valide;
+    }
+
+    public void Connexion()
+    {
+        TB_AdresseIP.setEnabled(false);
+        TB_Username.setEnabled(false);
+        BTN_Connexion.setText("Deconnection");
+        connecter = true;
+        if(!CKB_Connection.isSelected())
+        {
+            //ici on set le timeout utilisateur si l'utilisateur n'a pas coché de rester connecté
+        }
+        // ici on se connecte
+    }
+
+    public void Deconnexion()
+    {
+        BTN_Connexion.setText("Connexion");
+        connecter = false;
+
+        // ici on se deconnecte
+    }
+
+    public void EnvoyerMessage()
+    {
+        if (connecter) {
+            if (TB_Message.getText().isEmpty()) {
+                JOptionPane.showMessageDialog(rootPanel,
+                        "Un message vide ne peut être envoyé.", "Attention !",
+                        JOptionPane.WARNING_MESSAGE);
+            } else if (TB_Message.getText().trim().isEmpty()) {
+                JOptionPane.showMessageDialog(rootPanel,
+                        "Un message sans contenu ne peut être envoyé.", "Attention !",
+                        JOptionPane.WARNING_MESSAGE);
+                // Ici on "reset" notre timeout
+            } else {
+                TA_Chat.setText(TA_Chat.getText() + "\n" + TB_Username.getText() + ": " + TB_Message.getText());
+                TB_Message.setText("");
+
+                // Ici on écrit le message dans le textbox
+            }
+        } else {
+            JOptionPane.showMessageDialog(rootPanel,
+                    "Vous ne pouvez envoyer de message si vous n'êtes pas connecté.", "Attention !",
+                    JOptionPane.WARNING_MESSAGE);
+            TB_Message.setText("");
+        }
     }
 }
 
