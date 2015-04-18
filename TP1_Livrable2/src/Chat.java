@@ -40,7 +40,15 @@ public class Chat {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (connecter) {
-                    Deconnexion();
+                    int reponse = JOptionPane.showConfirmDialog( null,
+                            "Vous êtes connecté. Êtes-vous sur de vouloir quitter ?", "Attention !",
+                            JOptionPane.YES_NO_OPTION );
+
+                    if(reponse == JOptionPane.YES_OPTION)
+                    {
+                        Deconnexion();
+                        System.exit(1);
+                    }
                 } else {
                     System.exit(1);
                 }
@@ -61,7 +69,9 @@ public class Chat {
                     if (VerificationConnexion()) {
                         if (!VerifierNomUser(TB_Username.getText())) {
                             Connexion();
-                        } else {
+                        }
+                        else
+                        {
                             JOptionPane.showMessageDialog(rootPanel,
                                     "Nom d'utilisateur déjà utilisé.", "Attention !",
                                     JOptionPane.WARNING_MESSAGE);
@@ -70,6 +80,7 @@ public class Chat {
                 } else {
                     if (connecter) {
                         Deconnexion();
+
                     }
                 }
             }
@@ -141,6 +152,9 @@ public class Chat {
         connecter = false;
 
         // ici on se deconnecte
+
+        TB_AdresseIP.setEnabled(true);
+        TB_Username.setEnabled(true);
     }
 
     public void EnvoyerMessage()
@@ -156,10 +170,18 @@ public class Chat {
                         JOptionPane.WARNING_MESSAGE);
                 // Ici on "reset" notre timeout
             } else {
-                TA_Chat.setText(TA_Chat.getText() + "\n" + TB_Username.getText() + ": " + TB_Message.getText());
+                if(TA_Chat.getText().isEmpty())
+                {
+                    TA_Chat.setText(TA_Chat.getText() + TB_Username.getText() + ": " + TB_Message.getText());
+                }
+                else
+                {
+                    TA_Chat.setText(TA_Chat.getText() + "\n" + TB_Username.getText() + ": " + TB_Message.getText());
+                }
+
                 TB_Message.setText("");
 
-                // Ici on écrit le message dans le textbox
+                // Ici on écrit le message dans le textarea
             }
         } else {
             JOptionPane.showMessageDialog(rootPanel,
@@ -167,6 +189,8 @@ public class Chat {
                     JOptionPane.WARNING_MESSAGE);
             TB_Message.setText("");
         }
+
+        TB_Message.grabFocus();
     }
 }
 

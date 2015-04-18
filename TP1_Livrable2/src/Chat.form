@@ -8,9 +8,9 @@
     <properties>
       <background color="-3479430"/>
       <foreground color="-16777216"/>
-      <maximumSize width="660" height="620"/>
-      <minimumSize width="660" height="620"/>
-      <preferredSize width="660" height="620"/>
+      <maximumSize width="665" height="620"/>
+      <minimumSize width="665" height="620"/>
+      <preferredSize width="665" height="620"/>
     </properties>
     <clientProperties>
       <html.disable class="java.lang.Boolean" value="false"/>

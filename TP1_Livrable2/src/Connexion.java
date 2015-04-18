@@ -61,12 +61,16 @@ public class Connexion implements Runnable
 
     //---- Verification du username ----\\
     // Sert a verifier que notre username est correctement entré.
-    private void VerifierUsername()
+    private String VerifierUsername()
     {
+        String unUsernameCorrecte = username;
+
         if(username.length() >  MAX_USERNAME) // si ca depasse la limite, on tronque
-            username = username.substring(0, MAX_USERNAME);
+             unUsernameCorrecte = username.substring(0, MAX_USERNAME);
         else if(username.length() <= MIN_USERNAME) // si c'est sous la limite, on utilise l'adresse ip
-            username = unSocket.getInetAddress().getHostAddress();
+            unUsernameCorrecte = unSocket.getInetAddress().getHostAddress();
+
+        return unUsernameCorrecte;
     }
 
     //---- Verification du message ----\\
@@ -101,12 +105,9 @@ public class Connexion implements Runnable
     {
         try
         {
-            //demande du nom d'utilisateur
-            writer.print("Entrez votre nom d'utilisateur: ");
-            writer.flush();
 
             username = reader.readLine();
-            VerifierUsername();
+            username = VerifierUsername();
 
             // message d'acceuil dans le channel
             uneInstanceDeServeur.EcrireDesMessages(username + " viens de joindre la conversation.");
